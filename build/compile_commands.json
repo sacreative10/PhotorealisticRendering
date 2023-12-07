@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/sohaibalam/projects/PhotorealisticRendering/build",
+  "command": "/usr/bin/c++  -I/home/sohaibalam/projects/PhotorealisticRendering/external/Cashew/CashewLib/src -I/home/sohaibalam/projects/PhotorealisticRendering/external/Cashew/external/imgui -I/home/sohaibalam/projects/PhotorealisticRendering/external/Cashew/src -I/home/sohaibalam/projects/PhotorealisticRendering/external/Cashew/external/glfw/include -I/home/sohaibalam/projects/PhotorealisticRendering/external/Cashew/external/glm  -o CMakeFiles/PhotoRealsiticRendering.dir/src/main.cpp.o -c /home/sohaibalam/projects/PhotorealisticRendering/src/main.cpp",
+  "file": "/home/sohaibalam/projects/PhotorealisticRendering/src/main.cpp",
+  "output": "CMakeFiles/PhotoRealsiticRendering.dir/src/main.cpp.o"
+}
+]

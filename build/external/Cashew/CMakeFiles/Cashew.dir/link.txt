@@ -1,0 +1,2 @@
+/usr/bin/ar qc libCashew.a CMakeFiles/Cashew.dir/CashewLib/src/CashewLib/Application.cpp.o CMakeFiles/Cashew.dir/CashewLib/src/CashewLib/Image.cpp.o CMakeFiles/Cashew.dir/CashewLib/src/CashewLib/Input/Input.cpp.o
+/usr/bin/ranlib libCashew.a
