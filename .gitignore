@@ -2,6 +2,8 @@
 *.d
 .cache
 build/
+cmake-build-debug/
+.idea/
 # Compiled Object files
 *.slo
 *.lo
