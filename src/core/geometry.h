@@ -1,5 +1,5 @@
-#ifndef CORE_GEOMETRY_H
-#define CORE_GEOMETRY_H
+#ifndef PHR_CORE_GEOMETRY_H
+#define PHR_CORE_GEOMETRY_H
 // This file contains the most basic of geometry required for pbrt to work.
 // MOst classes and functions are graciously covered by glm, however some do
 // still need to be implemented.
@@ -8,6 +8,7 @@
 
 // TODO: Implement useful assertions
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include "phr.h"
 
@@ -32,6 +33,8 @@ class Vector3 : public glm::tvec3<T> {
   Vector3(T x, T y, T z) : glm::tvec3<T>(x, y, z) {}
   Vector3(const glm::tvec3<T> &v) : glm::tvec3<T>(v) {}
 };
+
+// TODO: Add a wrapper for glm::length2;
 
 typedef glm::vec3 Vector3f;
 typedef glm::vec2 Vector2f;
@@ -269,6 +272,11 @@ class Bounds3 {
   Point3<T> pMin, pMax;
 };
 
+typedef Bounds2<int> Bounds2i;
+typedef Bounds2<Float> Bounds2f;
+typedef Bounds3<int> Bounds3i;
+typedef Bounds3<Float> Bounds3f;
+
 template <typename T>
 Bounds2<T> Union(const Bounds2<T> &b, const Point2<T> &p) {
   return Bounds2<T>(
@@ -369,4 +377,4 @@ inline Bounds3<T> Expand(const Bounds3<T> &b, U delta) {
                     b.pMax + Vector3<T>(delta, delta, delta));
 }
 
-#endif  // CORE_GEOMETRY_H
+#endif  // PHR_CORE_GEOMETRY_H

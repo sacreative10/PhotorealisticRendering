@@ -1,4 +1,5 @@
-
+#ifndef PHR_CORE_PHR_H
+#define PHR_CORE_PHR_H
 
 #include <limits>
 
@@ -10,3 +11,5 @@ typedef float Float;
 
 static constexpr Float maxFloat = std::numeric_limits<Float>::max();
 static constexpr Float Infinity = std::numeric_limits<Float>::infinity();
+
+#endif  // PHR_CORE_PHR_H
