@@ -15,10 +15,11 @@ class ExampleLayer : public Cashew::Layer {
 public:
   virtual void onUIRender() override {
     ImGui::Begin("Configuration");
-    if (ImGui::Button("Render")) {
+    if (ImGui::Button("Render") || ImGui::ColorEdit4("Temporary Colour: ", &m_tempColour.x)) {
       Render();
     }
     ImGui::Text("Viewport size: %d x %d", m_viewportWidth, m_viewportHeight);
+
     ImGui::End();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -47,7 +48,8 @@ public:
 
     for (uint32_t y = 0; y < m_viewportHeight; y++) {
       for (uint32_t x = 0; x < m_viewportWidth; x++) {
-        m_imageData[x + y * m_viewportWidth] = 0xFF000000;
+        m_imageData[x + y * m_viewportWidth] =
+            ImGui::ColorConvertFloat4ToU32(m_tempColour);
       }
     }
 
@@ -59,6 +61,7 @@ private:
   uint32_t *m_imageData = nullptr;
   uint32_t m_viewportWidth = 0;
   uint32_t m_viewportHeight = 0;
+  ImVec4 m_tempColour;
 };
 
 Cashew::Application *Cashew::CreateApplication(int argc, char **argv) {
