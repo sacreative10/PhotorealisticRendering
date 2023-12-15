@@ -1,0 +1,9 @@
+on:
+  push:
+    branches:
+      - main
+    jobs:
+      steps:
+        - uses: actions/checkout@v1
+        - name: TODO to Action
+          uses: alstr/todo-to-issue-action@v4.11.1
