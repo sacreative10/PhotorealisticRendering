@@ -14,6 +14,8 @@ add_executable(${PROJECT_NAME}
   src/core/geometry.cpp 
   src/core/transform.h
   src/core/transform.cpp
+  src/core/interaction.h
+  src/core/interaction.cpp
   src/main.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC
   external/Cashew/CashewLib/src/)

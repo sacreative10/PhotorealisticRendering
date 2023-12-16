@@ -2,6 +2,7 @@
 #define PHR_CORE_TRANSFORM_H
 
 #include "geometry.h"
+#include "interaction.h"
 #include "phr.h"
 
 class Transform {
@@ -27,13 +28,32 @@ class Transform {
   bool isIdentity() const { return (m == glm::mat4(1.f)); }
 
   bool hasScale() const {
-    Float la2 = glm::length2(Vector3f(m[0][0], m[0][1], m[0][2]));
-    Float lb2 = glm::length2(Vector3f(m[1][0], m[1][1], m[1][2]));
-    Float lc2 = glm::length2(Vector3f(m[2][0], m[2][1], m[2][2]));
-#define NOT_ONE(x) ((x) < 0.999f || (x) > 1.001f)
+    Float la2 = (*this)(Vector3f(1, 0, 0)).lengthSquared();
+    Float lb2 = (*this)(Vector3f(0, 1, 0)).lengthSquared();
+    Float lc2 = (*this)(Vector3f(0, 0, 1)).lengthSquared();
+#define NOT_ONE(x) ((x) < .999f || (x) > 1.001f)
     return (NOT_ONE(la2) || NOT_ONE(lb2) || NOT_ONE(lc2));
 #undef NOT_ONE
   }
+  template <typename T>
+  inline Point3<T> operator()(const Point3<T> &p) const;
+
+  template <typename T>
+  inline Vector3<T> operator()(const Vector3<T> &v) const;
+
+  template <typename T>
+  inline Normal3<T> operator()(const Normal3<T> &n) const;
+
+  inline Ray operator()(const Ray &r) const;
+
+  inline RayDifferential operator()(const RayDifferential &r) const;
+
+  Bounds3f operator()(const Bounds3f &b) const;
+
+  Transform operator*(const Transform &t2) const;
+  SurfaceInteraction operator()(const SurfaceInteraction &si) const;
+
+  bool swapsHandedness() const;
 
  private:
   glm::mat4 m, mInv;

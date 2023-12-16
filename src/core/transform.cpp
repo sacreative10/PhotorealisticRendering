@@ -1,9 +1,11 @@
 
 #include "transform.h"
 
+#include "geometry.h"
 #include "glm/geometric.hpp"
 #include "glm/matrix.hpp"
 #include "glm/trigonometric.hpp"
+#include "interaction.h"
 
 Transform Translate(const Vector3f &delta) {
   glm::mat4 m(1.f);
@@ -90,4 +92,78 @@ Transform LookAt(const Point3f &pos, const Point3f &look, const Vector3f &up) {
   cameraToWorld[3][2] = 0.;
 
   return Transform(glm::inverse(cameraToWorld), cameraToWorld);
+}
+
+template <typename T>
+inline Point3<T> Transform::operator()(const Point3<T> &p) const {
+  T x = p.x, y = p.y, z = p.z;
+  T xp = m[0][0] * x + m[0][1] * y + m[0][2] * z + m[0][3];
+  T yp = m[1][0] * x + m[1][1] * y + m[1][2] * z + m[1][3];
+  T zp = m[2][0] * x + m[2][1] * y + m[2][2] * z + m[2][3];
+  T wp = m[3][0] * x + m[3][1] * y + m[3][2] * z + m[3][3];
+  if (wp == 1)
+    return Point3<T>(xp, yp, zp);
+  else
+    return Point3<T>(xp, yp, zp) / wp;
+}
+
+template <typename T>
+inline Vector3<T> Transform::operator()(const Vector3<T> &v) const {
+  T x = v.x, y = v.y, z = v.z;
+  return Vector3<T>(m[0][0] * x + m[0][1] * y + m[0][2] * z,
+                    m[1][0] * x + m[1][1] * y + m[1][2] * z,
+                    m[2][0] * x + m[2][1] * y + m[2][2] * z);
+}
+
+template <typename T>
+inline Normal3<T> Transform::operator()(const Normal3<T> &n) const {
+  T x = n.x, y = n.y, z = n.z;
+  return Normal3<T>(mInv[0][0] * x + mInv[1][0] * y + mInv[2][0] * z,
+                    mInv[0][1] * x + mInv[1][1] * y + mInv[2][1] * z,
+                    mInv[0][2] * x + mInv[1][2] * y + mInv[2][2] * z);
+}
+
+inline Ray Transform::operator()(const Ray &r) const {
+  Point3f o = (*this)(r.o);
+  Vector3f d = (*this)(r.d);
+  // TODO Offset ray origin
+  return Ray(o, d, r.tMax, r.time, r.medium);
+}
+
+// TODO Add ray differentials transform
+
+// inline RayDifferential Transform::operator()(const RayDifferential &r) const
+// {
+//   Ray tr = (*this)(Ray(r));
+//   RayDifferential ret(tr.o, tr.d, tr.tMax, tr.time, tr.medium);
+//   ret.hasDifferentials = r.hasDifferentials;
+//   ret.rxOrigin = (*this)(r.rxOrigin);
+//   ret.ryOrigin = (*this)(r.ryOrigin);
+//   ret.rxDirection = (*this)(r.rxDirection);
+//   ret.ryDirection = (*this)(r.ryDirection);
+//   return ret;
+// }
+
+Bounds3f Transform::operator()(const Bounds3f &b) const {
+  const Transform &M = *this;
+  Bounds3f ret(M(Point3f(b.pMin.x, b.pMin.y, b.pMin.z)));
+  ret = Union(ret, M(Point3f(b.pMax.x, b.pMin.y, b.pMin.z)));
+  ret = Union(ret, M(Point3f(b.pMin.x, b.pMax.y, b.pMin.z)));
+  ret = Union(ret, M(Point3f(b.pMin.x, b.pMin.y, b.pMax.z)));
+  ret = Union(ret, M(Point3f(b.pMin.x, b.pMax.y, b.pMax.z)));
+  ret = Union(ret, M(Point3f(b.pMax.x, b.pMax.y, b.pMin.z)));
+  ret = Union(ret, M(Point3f(b.pMax.x, b.pMin.y, b.pMax.z)));
+  ret = Union(ret, M(Point3f(b.pMax.x, b.pMax.y, b.pMax.z)));
+  return ret;
+}
+
+Transform Transform::operator*(const Transform &t2) const {
+  glm::mat4 m1 = m * t2.m;
+  glm::mat4 m2 = t2.mInv * mInv;
+  return Transform(m1, m2);
+}
+
+bool Transform::swapsHandedness() const {
+  Float det = glm::determinant(m);
+  return det < 0;
 }

@@ -10,7 +10,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 
+#include "glm/geometric.hpp"
 #include "phr.h"
+
+// TODO Implement Quaternion and AnimatedTransforms
 
 // This function creates a local coordinate system given a vector in 3D space.
 // We can construct the two other vectors by applying the cross-product,since
@@ -32,14 +35,28 @@ class Vector3 : public glm::tvec3<T> {
   Vector3() : glm::tvec3<T>() {}
   Vector3(T x, T y, T z) : glm::tvec3<T>(x, y, z) {}
   Vector3(const glm::tvec3<T> &v) : glm::tvec3<T>(v) {}
+
+  Float lengthSquared() const {
+    // convert to float first
+    return glm::length2(glm::vec3(*this));
+  }
+  Float length() const { return glm::length(glm::vec3(*this)); }
 };
 
-// TODO: Add a wrapper for glm::length2;
+typedef Vector3<Float> Vector3f;
+typedef Vector2<Float> Vector2f;
+typedef Vector3<int> Vector3i;
+typedef Vector2<int> Vector2i;
 
-typedef glm::vec3 Vector3f;
-typedef glm::vec2 Vector2f;
-typedef glm::vec3 Vector3i;
-typedef glm::vec2 Vector2i;
+template <typename T>
+inline Vector3<T> Normalize(const Vector3<T> &v) {
+  return glm::normalize(v);
+}
+
+template <typename T>
+inline Vector3<T> Cross(const Vector3<T> &v1, const Vector3<T> &v2) {
+  return glm::cross(v1, v2);
+}
 
 inline void CoordinateSystem(const glm::vec3 &v1, glm::vec3 *v2,
                              glm::vec3 *v3) {
@@ -80,7 +97,7 @@ Point2<T> Lerp(Float t, const Point2<T> &p0, const Point2<T> &p1) {
 }
 
 template <typename T>
-class Normal3 : glm::tvec3<T> {
+class Normal3 : public glm::tvec3<T> {
  public:
   Normal3() : glm::tvec3<T>() {}
   Normal3(T x, T y, T z) : glm::tvec3<T>(x, y, z) {}
@@ -208,7 +225,7 @@ class Bounds3 {
     pMin = Point3<T>(maxNum, maxNum, maxNum);
     pMax = Point3<T>(minNum, minNum, minNum);
   }
-  Bounds3(Point3<T> &p) : pMin(p), pMax(p) {}
+  Bounds3(const Point3<T> &p) : pMin(p), pMax(p) {}
   Bounds3(const Point3<T> &p1, const Point3<T> &p2) {
     pMin = Point3<T>(std::min(p1.x, p2.x), std::min(p1.y, p2.y),
                      std::min(p1.z, p2.z));
