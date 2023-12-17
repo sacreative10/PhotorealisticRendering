@@ -23,7 +23,7 @@ SurfaceInteraction::SurfaceInteraction(
   shading.dndu = dndu;
   shading.dndv = dndv;
 
-  // TODO Add code to check for handedness
+  // @TODO Add code to check for handedness
 }
 
 void SurfaceInteraction::setShadingGeometry(const Vector3f& dpdus,
