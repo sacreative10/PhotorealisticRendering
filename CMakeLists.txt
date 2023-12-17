@@ -16,7 +16,12 @@ add_executable(${PROJECT_NAME}
   src/core/transform.cpp
   src/core/interaction.h
   src/core/interaction.cpp
+  src/core/shape.h
+  src/core/shape.cpp
   src/main.cpp)
+
+target_include_directories(${PROJECT_NAME} PRIVATE src/core/)
+
 target_include_directories(${PROJECT_NAME} PUBLIC
   external/Cashew/CashewLib/src/)
 target_link_libraries(${PROJECT_NAME} Cashew)

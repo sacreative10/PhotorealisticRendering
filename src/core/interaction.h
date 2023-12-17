@@ -3,18 +3,17 @@
 
 #include "geometry.h"
 
-// TODO Implement MediumInterface and Shape classes.
+// TODO Implement MediumInterface class
+
+class Shape;
 
 class MediumInterface {
   // allow conversion to nullptr
   bool isImplemened = false;
 };
 
-struct Shape {
-  bool isImplemened = false;
-};
-
 struct Interaction {
+  Interaction() : time(0) {}
   Interaction(const Point3f& p, const Normal3f& n, const Vector3f& pError,
               const Vector3f& wo, Float time,
               const MediumInterface& mediumInterface)
@@ -37,6 +36,7 @@ struct Interaction {
 
 class SurfaceInteraction : public Interaction {
  public:
+  SurfaceInteraction() {}
   SurfaceInteraction(const Point3f& p, const Vector3f& pError,
                      const Point2f& uv, const Vector3f& wo,
                      const Vector3f& dpdu, const Vector3f& dpdv,
