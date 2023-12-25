@@ -15,17 +15,18 @@ class Shape {
 
   virtual ~Shape() {}
 
-  virtual Bounds3f ObjectBound() const = 0;
+  virtual Bounds3f objectBound() const = 0;
 
-  Bounds3f WorldBound() const { return (*objectToWorld)(ObjectBound()); }
+  Bounds3f worldBound() const { return (*objectToWorld)(objectBound()); }
 
-  virtual bool Intersect(const Ray &ray, Float *tHit, SurfaceInteraction *isect,
+  virtual bool intersect(const Ray &ray, Float *tHit, SurfaceInteraction *isect,
                          bool testAlphaTexture = true) const = 0;
 
-  virtual bool IntersectP(const Ray &ray, bool testAlphaTexture = true) const {
+  virtual bool intersectP(const Ray &ray, Float *tHit,
+                          bool testAlphaTexture = true) const {
     Float tHit = ray.tMax;
     SurfaceInteraction isect;
-    return Intersect(ray, &tHit, &isect, testAlphaTexture);
+    return intersect(ray, &tHit, &isect, testAlphaTexture);
   }
 
   virtual Float Area() const = 0;

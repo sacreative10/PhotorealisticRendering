@@ -26,7 +26,7 @@ class Vector2 : public glm::tvec2<T> {
  public:
   Vector2() : glm::tvec2<T>() {}
   Vector2(T x, T y) : glm::tvec2<T>(x, y) {}
-  Vector2(const glm::tvec2<T> &v) : glm::tvec2<T>(v) {}
+  explicit Vector2(const glm::tvec2<T> &v) : glm::tvec2<T>(v) {}
 };
 
 template <typename T>
@@ -47,6 +47,11 @@ typedef Vector3<Float> Vector3f;
 typedef Vector2<Float> Vector2f;
 typedef Vector3<int> Vector3i;
 typedef Vector2<int> Vector2i;
+
+template <typename T>
+inline T Dot(const Vector3<T> &v1, const Vector3<T> &v2) {
+  return glm::dot(v1, v2);
+}
 
 template <typename T>
 inline Vector3<T> Normalize(const Vector3<T> &v) {

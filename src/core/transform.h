@@ -39,12 +39,23 @@ class Transform {
   inline Point3<T> operator()(const Point3<T> &p) const;
 
   template <typename T>
+  inline Point3<T> operator()(const Point3<T> &p, Vector3f *pError) const;
+
+  template <typename T>
   inline Vector3<T> operator()(const Vector3<T> &v) const;
+
+  template <typename T>
+        inline Vector3<T> operator()(const Vector3<T> &v, Vector3f *vError) const;
 
   template <typename T>
   inline Normal3<T> operator()(const Normal3<T> &n) const;
 
   inline Ray operator()(const Ray &r) const;
+
+  inline Ray operator()(const Ray &r, Vector3f *oError,
+                        Vector3f *dError) const;
+
+
 
   inline RayDifferential operator()(const RayDifferential &r) const;
 
