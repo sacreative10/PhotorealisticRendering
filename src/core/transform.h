@@ -39,13 +39,40 @@ class Transform {
   inline Point3<T> operator()(const Point3<T> &p) const;
 
   template <typename T>
-  inline Point3<T> operator()(const Point3<T> &p, Vector3f *pError) const;
+  inline Point3<T> operator()(const Point3<T> &p, Vector3f *pError) const {
+    T x = p.x, y = p.y, z = p.z;
+    T xp = m[0][0] * x + m[0][1] * y + m[0][2] * z + m[0][3];
+    T yp = m[1][0] * x + m[1][1] * y + m[1][2] * z + m[1][3];
+    T zp = m[2][0] * x + m[2][1] * y + m[2][2] * z + m[2][3];
+    T wp = m[3][0] * x + m[3][1] * y + m[3][2] * z + m[3][3];
+    // TODO Compute transformed error bounds for transformed vector
+    *pError =
+        Vector3f(glm::abs((m[0][0] + m[0][3]) * x + (m[0][1] + m[0][3]) * y +
+                          (m[0][2] + m[0][3]) * z),
+                 glm::abs((m[1][0] + m[1][3]) * x + (m[1][1] + m[1][3]) * y +
+                          (m[1][2] + m[1][3]) * z),
+                 glm::abs((m[2][0] + m[2][3]) * x + (m[2][1] + m[2][3]) * y +
+                          (m[2][2] + m[2][3]) * z));
+    if (wp == 1)
+      return Point3<T>(xp, yp, zp);
+    else
+      return Point3<T>(xp, yp, zp) / wp;
+  }
 
   template <typename T>
   inline Vector3<T> operator()(const Vector3<T> &v) const;
 
   template <typename T>
-        inline Vector3<T> operator()(const Vector3<T> &v, Vector3f *vError) const;
+  inline Vector3<T> operator()(const Vector3<T> &v, Vector3f *vError) const {
+    T x = v.x, y = v.y, z = v.z;
+    // TODO Compute transformed error bounds for transformed vector
+    *vError = Vector3f(glm::abs(m[0][0] * x + m[0][1] * y + m[0][2] * z),
+                       glm::abs(m[1][0] * x + m[1][1] * y + m[1][2] * z),
+                       glm::abs(m[2][0] * x + m[2][1] * y + m[2][2] * z));
+    return Vector3<T>(m[0][0] * x + m[0][1] * y + m[0][2] * z,
+                      m[1][0] * x + m[1][1] * y + m[1][2] * z,
+                      m[2][0] * x + m[2][1] * y + m[2][2] * z);
+  }
 
   template <typename T>
   inline Normal3<T> operator()(const Normal3<T> &n) const;
@@ -53,9 +80,12 @@ class Transform {
   inline Ray operator()(const Ray &r) const;
 
   inline Ray operator()(const Ray &r, Vector3f *oError,
-                        Vector3f *dError) const;
-
-
+                        Vector3f *dError) const {
+    Point3f o = (*this)(r.o, oError);
+    Vector3f d = (*this)(r.d, dError);
+    // TODO Offset ray origin to edge of error bounds and compute _tMax_
+    return Ray(o, d, r.tMax, r.time, r.medium);
+  }
 
   inline RayDifferential operator()(const RayDifferential &r) const;
 

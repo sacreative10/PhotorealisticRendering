@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if (MSVC)
     add_compile_options(/W4 /WX)
 else ()
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
+    add_compile_options(-Wall -Wextra -pedantic)
 endif ()
 
 add_executable(${PROJECT_NAME}
@@ -27,7 +27,10 @@ add_executable(${PROJECT_NAME}
         src/core/shape.cpp
         src/shapes/sphere.h
         src/shapes/sphere.cpp
-        src/main.cpp)
+        src/main.cpp
+        src/core/Efloat.h
+        src/core/Efloat.cpp
+)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)
 

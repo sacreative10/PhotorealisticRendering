@@ -41,6 +41,9 @@ class Vector3 : public glm::tvec3<T> {
     return glm::length2(glm::vec3(*this));
   }
   Float length() const { return glm::length(glm::vec3(*this)); }
+
+  Vector3 operator*(Float f) const { return glm::vec3(*this) * f; }
+  Vector3 operator/(Float f) const { return glm::vec3(*this) / f; }
 };
 
 typedef Vector3<Float> Vector3f;
@@ -50,7 +53,7 @@ typedef Vector2<int> Vector2i;
 
 template <typename T>
 inline T Dot(const Vector3<T> &v1, const Vector3<T> &v2) {
-  return glm::dot(v1, v2);
+  return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
 template <typename T>
@@ -113,8 +116,19 @@ class Normal3 : public glm::tvec3<T> {
 typedef Normal3<Float> Normal3f;
 
 template <typename T>
+T Dot(const Normal3<T> &n1, const Normal3<T> &n2) {
+  return n1.x * n2.x + n1.y * n2.y + n1.z * n2.z;
+}
+
+template <typename T>
 inline Normal3<T> FaceForward(const Normal3<T> &n, const Vector3<T> &v) {
   return (glm::dot(n, v) < 0.f) ? -n : n;
+}
+
+template <typename T>
+inline Normal3<T> FaceForward(const Normal3<T> &n, const Normal3<T> &n2) {
+  if (Dot(n, n2) < 0.f) return -n;
+  return n;
 }
 
 // Forward declarations of medium
@@ -299,6 +313,7 @@ class Bounds3 {
       Float invRayDir = 1 / ray.d[i];
       Float tNear = (pMin[i] - ray.o[i]) * invRayDir;
       Float tFar = (pMax[i] - ray.o[i]) * invRayDir;
+      tFar *= 1 + 2 * gamma(3);
       // update parametric interval from slab intersection t values
       if (tNear > tFar) {
         std::swap(tNear, tFar);

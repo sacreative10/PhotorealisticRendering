@@ -1,21 +1,23 @@
 
-#include "imgui.h"
 #include <CashewLib/Application.h>
 #include <CashewLib/EntryPoint.h>
-
 #include <CashewLib/Image.h>
-#include <cstdint>
-#include <iomanip>
-
 #include <CashewLib/Input/Input.h>
 #include <CashewLib/Input/KeyCodes.h>
+
+#include <cstdint>
+#include <iomanip>
 #include <memory>
 
+#include "imgui.h"
+#include "shapes/sphere.h"
+
 class ExampleLayer : public Cashew::Layer {
-public:
+ public:
   virtual void onUIRender() override {
     ImGui::Begin("Configuration");
-    if (ImGui::Button("Render") || ImGui::ColorEdit4("Temporary Colour: ", &m_tempColour.x)) {
+    if (ImGui::Button("Render") ||
+        ImGui::ColorEdit4("Temporary Colour: ", &m_tempColour.x)) {
       Render();
     }
     ImGui::Text("Viewport size: %d x %d", m_viewportWidth, m_viewportHeight);
@@ -52,11 +54,10 @@ public:
             ImGui::ColorConvertFloat4ToU32(m_tempColour);
       }
     }
-
     m_image->setData(m_imageData);
   }
 
-private:
+ private:
   std::shared_ptr<Cashew::Image> m_image;
   uint32_t *m_imageData = nullptr;
   uint32_t m_viewportWidth = 0;

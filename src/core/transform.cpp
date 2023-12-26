@@ -107,28 +107,27 @@ inline Point3<T> Transform::operator()(const Point3<T> &p) const {
     return Point3<T>(xp, yp, zp) / wp;
 }
 
-template <typename T>
-inline Point3<T> Transform::operator()(const Point3<T> &p,
-                                       Vector3f *pError) const {
-  T x = p.x, y = p.y, z = p.z;
-  T xp = m[0][0] * x + m[0][1] * y + m[0][2] * z + m[0][3];
-  T yp = m[1][0] * x + m[1][1] * y + m[1][2] * z + m[1][3];
-  T zp = m[2][0] * x + m[2][1] * y + m[2][2] * z + m[2][3];
-  T wp = m[3][0] * x + m[3][1] * y + m[3][2] * z + m[3][3];
-  *pError = gamma(3) * Vector3f(glm::abs((m[0][0] + m[0][3]) * x +
-                                         (m[0][1] + m[0][3]) * y +
-                                         (m[0][2] + m[0][3]) * z),
-                                glm::abs((m[1][0] + m[1][3]) * x +
-                                         (m[1][1] + m[1][3]) * y +
-                                         (m[1][2] + m[1][3]) * z),
-                                glm::abs((m[2][0] + m[2][3]) * x +
-                                         (m[2][1] + m[2][3]) * y +
-                                         (m[2][2] + m[2][3]) * z));
-  if (wp == 1)
-    return Point3<T>(xp, yp, zp);
-  else
-    return Point3<T>(xp, yp, zp) / wp;
-}
+// template <typename T>
+// inline Point3<T> Transform::operator()(const Point3<T> &p,
+//                                        Vector3f *pError) const {
+//   T x = p.x, y = p.y, z = p.z;
+//   T xp = m[0][0] * x + m[0][1] * y + m[0][2] * z + m[0][3];
+//   T yp = m[1][0] * x + m[1][1] * y + m[1][2] * z + m[1][3];
+//   T zp = m[2][0] * x + m[2][1] * y + m[2][2] * z + m[2][3];
+//   T wp = m[3][0] * x + m[3][1] * y + m[3][2] * z + m[3][3];
+//   // TODO Compute transformed error bounds for transformed vector
+//   *pError =
+//       Vector3f(glm::abs((m[0][0] + m[0][3]) * x + (m[0][1] + m[0][3]) * y +
+//                         (m[0][2] + m[0][3]) * z),
+//                glm::abs((m[1][0] + m[1][3]) * x + (m[1][1] + m[1][3]) * y +
+//                         (m[1][2] + m[1][3]) * z),
+//                glm::abs((m[2][0] + m[2][3]) * x + (m[2][1] + m[2][3]) * y +
+//                         (m[2][2] + m[2][3]) * z));
+//   if (wp == 1)
+//     return Point3<T>(xp, yp, zp);
+//   else
+//     return Point3<T>(xp, yp, zp) / wp;
+// }
 
 template <typename T>
 inline Vector3<T> Transform::operator()(const Vector3<T> &v) const {
@@ -138,18 +137,18 @@ inline Vector3<T> Transform::operator()(const Vector3<T> &v) const {
                     m[2][0] * x + m[2][1] * y + m[2][2] * z);
 }
 
-template <typename T>
-inline Vector3<T> Transform::operator()(const Vector3<T> &v,
-                                        Vector3f *vError) const {
-  T x = v.x, y = v.y, z = v.z;
-  *vError = gamma(3) *
-            Vector3f(glm::abs(m[0][0] * x + m[0][1] * y + m[0][2] * z),
-                     glm::abs(m[1][0] * x + m[1][1] * y + m[1][2] * z),
-                     glm::abs(m[2][0] * x + m[2][1] * y + m[2][2] * z));
-  return Vector3<T>(m[0][0] * x + m[0][1] * y + m[0][2] * z,
-                    m[1][0] * x + m[1][1] * y + m[1][2] * z,
-                    m[2][0] * x + m[2][1] * y + m[2][2] * z);
-}
+// template <typename T>
+// inline Vector3<T> Transform::operator()(const Vector3<T> &v,
+//                                         Vector3f *vError) const {
+//   T x = v.x, y = v.y, z = v.z;
+//   // TODO Compute transformed error bounds for transformed vector
+//   *vError = Vector3f(glm::abs(m[0][0] * x + m[0][1] * y + m[0][2] * z),
+//                      glm::abs(m[1][0] * x + m[1][1] * y + m[1][2] * z),
+//                      glm::abs(m[2][0] * x + m[2][1] * y + m[2][2] * z));
+//   return Vector3<T>(m[0][0] * x + m[0][1] * y + m[0][2] * z,
+//                     m[1][0] * x + m[1][1] * y + m[1][2] * z,
+//                     m[2][0] * x + m[2][1] * y + m[2][2] * z);
+// }
 
 template <typename T>
 inline Normal3<T> Transform::operator()(const Normal3<T> &n) const {
@@ -166,13 +165,13 @@ inline Ray Transform::operator()(const Ray &r) const {
   return Ray(o, d, r.tMax, r.time, r.medium);
 }
 
-inline Ray Transform::operator()(const Ray &r, Vector3f *oError,
-                                 Vector3f *dError) const {
-  Point3f o = (*this)(r.o, oError);
-  Vector3f d = (*this)(r.d, dError);
-  // TODO Offset ray origin
-  return Ray(o, d, r.tMax, r.time, r.medium);
-}
+// inline Ray Transform::operator()(const Ray &r, Vector3f *oError,
+//                                  Vector3f *dError) const {
+//   Point3f o = (*this)(r.o, oError);
+//   Vector3f d = (*this)(r.d, dError);
+//   // TODO Offset ray origin
+//   return Ray(o, d, r.tMax, r.time, r.medium);
+// }
 
 // TODO Add ray differentials transform
 
@@ -201,6 +200,31 @@ Bounds3f Transform::operator()(const Bounds3f &b) const {
   return ret;
 }
 
+SurfaceInteraction Transform::operator()(const SurfaceInteraction &si) const {
+  SurfaceInteraction ret;
+  ret.p = (*this)(si.p, &ret.pError);
+
+  const Transform &t = *this;
+  ret.n = glm::normalize(t(si.n));
+  ret.wo = glm::normalize(t(si.wo));
+  ret.time = si.time;
+  ret.mediumInterface = si.mediumInterface;
+  ret.uv = si.uv;
+  ret.shape = si.shape;
+  ret.dndu = si.dndu;
+  ret.dndv = si.dndv;
+  ret.dpdu = t(si.dpdu);
+  ret.dpdv = t(si.dpdv);
+  ret.shading.n = glm::normalize(t(si.shading.n));
+  ret.shading.dpdu = t(si.shading.dpdu);
+  ret.shading.dpdv = t(si.shading.dpdv);
+  ret.shading.dndu = t(si.shading.dndu);
+  ret.shading.dndu = t(si.shading.dndv);
+  ret.shading.n = glm::normalize(t(si.shading.n));
+  ret.shading.n = FaceForward(ret.shading.n, ret.n);
+
+  return ret;
+}
 Transform Transform::operator*(const Transform &t2) const {
   glm::mat4 m1 = m * t2.m;
   glm::mat4 m2 = t2.mInv * mInv;
