@@ -95,8 +95,7 @@ bool Sphere::intersect(const Ray& ray, Float* tHit, SurfaceInteraction* isect,
   return true;
 }
 
-bool Sphere::intersectP(const Ray& ray, Float* tHit,
-                        bool testAlphaTexture) const {
+bool Sphere::intersectP(const Ray& ray, bool testAlphaTexture) const {
   Float phi;
   Vector3f oErr, dErr;
   Point3f pHit;
@@ -139,8 +138,6 @@ bool Sphere::intersectP(const Ray& ray, Float* tHit,
         phi > phiMax)
       return false;
   }
-
-  *tHit = (Float)tShapeHit;
 
   return true;
 }

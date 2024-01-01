@@ -18,8 +18,7 @@ class Sphere : public Shape {
   Bounds3f objectBound() const override;
   bool intersect(const Ray& ray, Float* tHit, SurfaceInteraction* isect,
                  bool testAlphaTexture) const override;
-  bool intersectP(const Ray& ray, Float* tHit,
-                  bool testAlphaTexture) const override;
+  bool intersectP(const Ray& ray, bool testAlphaTexture) const override;
 
   Float Area() const override;
 

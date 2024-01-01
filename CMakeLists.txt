@@ -30,6 +30,8 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/core/Efloat.h
         src/core/Efloat.cpp
+        src/core/primitive.h
+        src/core/primitive.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)

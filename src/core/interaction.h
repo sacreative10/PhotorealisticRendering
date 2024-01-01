@@ -1,8 +1,8 @@
 #ifndef PHR_CORE_INTERACTION_H
 #define PHR_CORE_INTERACTION_H
 
+#include "core/geometry.h"
 #include "core/phr.h"
-#include "geometry.h"
 
 // TODO: Implement MediumInterface class
 
@@ -46,6 +46,10 @@ struct Interaction {
   MediumInterface mediumInterface;
 };
 
+class Primitive;
+class BSDF;
+class BSSRDF;
+
 class SurfaceInteraction : public Interaction {
  public:
   SurfaceInteraction() = default;
@@ -64,6 +68,9 @@ class SurfaceInteraction : public Interaction {
   Vector3f dpdu, dpdv;
   Normal3f dndu, dndv;
   const Shape* shape = nullptr;
+  const Primitive* primitive = nullptr;
+  BSDF* bsdf = nullptr;
+  BSSRDF* bssrdf = nullptr;
 
   struct {
     Normal3f n;

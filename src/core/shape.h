@@ -22,8 +22,7 @@ class Shape {
   virtual bool intersect(const Ray &ray, Float *tHit, SurfaceInteraction *isect,
                          bool testAlphaTexture = true) const = 0;
 
-  virtual bool intersectP(const Ray &ray, Float *tHit,
-                          bool testAlphaTexture = true) const {
+  virtual bool intersectP(const Ray &ray, bool testAlphaTexture = true) const {
     return intersect(ray, nullptr, nullptr, testAlphaTexture);
   }
 
