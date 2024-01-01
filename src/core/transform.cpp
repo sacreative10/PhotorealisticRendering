@@ -161,8 +161,17 @@ inline Normal3<T> Transform::operator()(const Normal3<T> &n) const {
 inline Ray Transform::operator()(const Ray &r) const {
   Point3f o = (*this)(r.o);
   Vector3f d = (*this)(r.d);
-  // TODO Offset ray origin
-  return Ray(o, d, r.tMax, r.time, r.medium);
+  Float lengthSqr = d.lengthSquared();
+  Float tmax = r.tMax;
+  if (lengthSqr > 0) {
+    Float dt = glm::dot(Abs(d), r.tMax * d / glm::sqrt(lengthSqr));
+    // HACK: should be +=, but the way i have implemented it makes it not
+    // possible.
+    o = o + d * dt;
+    tmax -= dt;
+  }
+
+  return Ray(o, d, tmax, r.time, r.medium);
 }
 
 // inline Ray Transform::operator()(const Ray &r, Vector3f *oError,
@@ -172,8 +181,6 @@ inline Ray Transform::operator()(const Ray &r) const {
 //   // TODO Offset ray origin
 //   return Ray(o, d, r.tMax, r.time, r.medium);
 // }
-
-// TODO Add ray differentials transform
 
 // inline RayDifferential Transform::operator()(const RayDifferential &r) const
 // {

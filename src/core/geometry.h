@@ -66,6 +66,11 @@ inline Vector3<T> Cross(const Vector3<T> &v1, const Vector3<T> &v2) {
   return glm::cross(v1, v2);
 }
 
+template <typename T>
+inline Vector3<T> Abs(const Vector3<T> &v) {
+  return Vector3<T>(std::abs(v.x), std::abs(v.y), std::abs(v.z));
+}
+
 inline void CoordinateSystem(const glm::vec3 &v1, glm::vec3 *v2,
                              glm::vec3 *v3) {
   if (std::abs(v1.x) > std::abs(v1.y)) {
@@ -131,6 +136,11 @@ inline Normal3<T> FaceForward(const Normal3<T> &n, const Normal3<T> &n2) {
   return n;
 }
 
+template <typename T>
+inline Normal3<T> Abs(const Normal3<T> &n) {
+  return Normal3<T>(std::abs(n.x), std::abs(n.y), std::abs(n.z));
+}
+
 // Forward declarations of medium
 
 class Medium;
@@ -173,6 +183,21 @@ class RayDifferential : public Ray {
   Point3f rxOrigin, ryOrigin;
   Vector3f rxDirection, ryDirection;
 };
+
+inline Point3f offsetRayOrigin(const Point3f &p, const Vector3f &pError,
+                               const Normal3f &n, const Vector3f &w) {
+  Float d = glm::dot(Abs(n), pError);
+  Vector3f offset = d * Vector3f(n);
+  if (glm::dot(w, n) < 0) offset = -offset;
+  Point3f po = p + offset;
+  for (int i = 0; i < 3; ++i) {
+    if (offset[i] > 0)
+      po[i] = nextFloatUp(po[i]);
+    else if (offset[i] < 0)
+      po[i] = nextFloatDown(po[i]);
+  }
+  return po;
+}
 
 template <typename T>
 class Bounds2 {

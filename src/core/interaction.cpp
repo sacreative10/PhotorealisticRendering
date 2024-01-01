@@ -1,6 +1,7 @@
 
 #include "interaction.h"
 
+#include "core/shape.h"
 #include "geometry.h"
 
 MediumInterface* getMediumInterface() { return nullptr; }
@@ -23,7 +24,7 @@ SurfaceInteraction::SurfaceInteraction(
   shading.dndu = dndu;
   shading.dndv = dndv;
 
-  // @TODO Add code to check for handedness
+  // TODO: Add code to check for handedness
 }
 
 void SurfaceInteraction::setShadingGeometry(const Vector3f& dpdus,
@@ -31,13 +32,13 @@ void SurfaceInteraction::setShadingGeometry(const Vector3f& dpdus,
                                             const Normal3f& dndus,
                                             const Normal3f& dndvs,
                                             bool orientationIsAuthoritative) {
-  // shading.n = Normalize((Normal3f)Cross(dpdus, dpdvs));
-  // if (shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness))
-  //   shading.n = -shading.n;
-  // if (orientationIsAuthoritative)
-  //   n = Faceforward(n, shading.n);
-  // else
-  //   shading.n = Faceforward(shading.n, n);
+  shading.n = glm::normalize((Normal3f)Cross(dpdus, dpdvs));
+  if (shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness))
+    shading.n = -shading.n;
+  if (orientationIsAuthoritative)
+    n = FaceForward(n, shading.n);
+  else
+    shading.n = FaceForward(shading.n, n);
   shading.dpdu = dpdus;
   shading.dpdv = dpdvs;
   shading.dndu = dndus;

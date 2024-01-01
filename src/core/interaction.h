@@ -1,9 +1,10 @@
 #ifndef PHR_CORE_INTERACTION_H
 #define PHR_CORE_INTERACTION_H
 
+#include "core/phr.h"
 #include "geometry.h"
 
-// TODO Implement MediumInterface class
+// TODO: Implement MediumInterface class
 
 class Shape;
 
@@ -25,6 +26,17 @@ struct Interaction {
         mediumInterface(mediumInterface) {}
 
   bool isSurfaceInteraction() const { return n != Normal3f(); }
+  Ray spawnRay(const Vector3f& d) const {
+    Point3f o = offsetRayOrigin(p, pError, n, d);
+    // TODO: GETMEDIUM();
+    return Ray(o, d, Infinity, time, nullptr);
+  }
+
+  Ray spawnRayTo(const Point3f& p2) const {
+    Point3f origin = offsetRayOrigin(p, pError, n, p2 - n);
+    Vector3f d = p2 - origin;
+    return Ray(origin, d, 1 - ShadowEpsilon, time, nullptr);
+  }
 
   Point3f p;
   Float time;

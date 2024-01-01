@@ -22,6 +22,8 @@ static constexpr Float invPi = 0.31830988618379067154;
 static constexpr Float machineEpsilon =
     std::numeric_limits<Float>::epsilon() * 0.5;
 
+const Float ShadowEpsilon = 0.0001f;
+
 template <typename T, typename U, typename V>
 inline T Clamp(T val, U low, V high) {
   if (val < low) return low;
