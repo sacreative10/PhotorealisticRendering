@@ -16,6 +16,8 @@ else ()
 endif ()
 
 add_executable(${PROJECT_NAME}
+        src/core/util/MemoryArena.h
+        src/core/util/MemoryArena.cpp
         src/core/phr.h
         src/core/geometry.h
         src/core/geometry.cpp
@@ -32,6 +34,8 @@ add_executable(${PROJECT_NAME}
         src/core/Efloat.cpp
         src/core/primitive.h
         src/core/primitive.cpp
+        src/accelerators/bvh.h
+        src/accelerators/bvh.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)

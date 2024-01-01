@@ -1,5 +1,10 @@
 #include "core/primitive.h"
 
+#include <cstdio>
+#include <stdexcept>
+
+#include "core/geometry.h"
+
 // TODO: Come back for MemoryArena
 GeometricPrimitive::GeometricPrimitive(std::shared_ptr<Shape> shape,
                                        std::shared_ptr<Material> material,
@@ -27,3 +32,22 @@ const AreaLight* GeometricPrimitive::GetAreaLight() const {
 void GeometricPrimitive::computeScatterFunctions(
     SurfaceInteraction* isect, MemoryArena& arena, TransportMode mode,
     bool allowMultipleLobes) const {}
+
+Bounds3f GeometricPrimitive::WorldBound() const { return shape->worldBound(); }
+
+const AreaLight* Aggregate::GetAreaLight() const {
+  throw std::runtime_error(
+      "Aggregate::GetAreaLight() called. This is an error.\n");
+}
+
+const Material* Aggregate::GetMaterial() const {
+  throw std::runtime_error(
+      "Aggregate::GetMaterial() called. This is an error.\n");
+}
+
+void Aggregate::computeScatterFunctions(SurfaceInteraction* isect,
+                                        MemoryArena& arena, TransportMode mode,
+                                        bool allowMultipleLobes) const {
+  throw std::runtime_error(
+      "Aggregate::computeScatterFunctions() called. This is an error.\n");
+}

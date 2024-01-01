@@ -42,6 +42,7 @@ class GeometricPrimitive : public Primitive {
   void computeScatterFunctions(SurfaceInteraction* isect, MemoryArena& arena,
                                TransportMode mode,
                                bool allowMultipleLobes) const override;
+  Bounds3f WorldBound() const override;
 
  private:
   std::shared_ptr<Shape> shape;
