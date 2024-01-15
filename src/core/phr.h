@@ -1,6 +1,8 @@
 #ifndef PHR_CORE_PHR_H
 #define PHR_CORE_PHR_H
 
+#include <malloc.h>
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -18,6 +20,8 @@ static constexpr Float Infinity = std::numeric_limits<Float>::infinity();
 
 static constexpr Float Pi = 3.14159265358979323846;
 static constexpr Float invPi = 0.31830988618379067154;
+
+#define PBRT_L1_CACHE_LINE_SIZE 64
 
 static constexpr Float machineEpsilon =
     std::numeric_limits<Float>::epsilon() * 0.5;

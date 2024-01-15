@@ -329,52 +329,61 @@ class Bounds3 {
     *radius = Inside(*center, *this) ? Distance(*center, pMax) : 0;
   }
 
-  template <typename U>
-  inline bool IntersectP(const Ray &ray, Float *hitt0 = nullptr,
-                         Float *hitt1 = nullptr) const {
-    Float t0 = 0, t1 = ray.tMax;
-    for (int i = 0; i < 3; ++i) {
-      // update interval for i-th bounding box slab
-      Float invRayDir = 1 / ray.d[i];
-      Float tNear = (pMin[i] - ray.o[i]) * invRayDir;
-      Float tFar = (pMax[i] - ray.o[i]) * invRayDir;
-      tFar *= 1 + 2 * gamma(3);
-      // update parametric interval from slab intersection t values
-      if (tNear > tFar) {
-        std::swap(tNear, tFar);
-      }
-      t0 = tNear > t0 ? tNear : t0;
-      t1 = tFar < t1 ? tFar : t1;
-      if (t0 > t1) {
-        return false;
-      }
-    }
-    if (hitt0) *hitt0 = t0;
-    if (hitt1) *hitt1 = t1;
-    return true;
-  }
-
-  template <typename U>
+  bool IntersectP(const Ray &ray, Float *hitt0 = nullptr,
+                  Float *hitt1 = nullptr) const;
   inline bool IntersectP(const Ray &ray, const Vector3f &invDir,
-                         const int dirIntNeg[3]) {
-    const Bounds3<Float> &bounds = *this;
-    Float tMin = (bounds[dirIntNeg[0]].x - ray.o.x) * invDir.x;
-    Float tMax = (bounds[1 - dirIntNeg[0]].x - ray.o.x) * invDir.x;
-    Float tyMin = (bounds[dirIntNeg[1]].y - ray.o.y) * invDir.y;
-    Float tyMax = (bounds[1 - dirIntNeg[1]].y - ray.o.y) * invDir.y;
-    float tzMin = (bounds[dirIntNeg[2]].z - ray.o.z) * invDir.z;
-    float tzMax = (bounds[1 - dirIntNeg[2]].z - ray.o.z) * invDir.z;
-
-    // TODO Update tmax and tyMax for bounding box intersection
-
-    if (tMin > tyMax || tyMin > tMax) return false;
-    if (tyMin > tMin) tMin = tyMin;
-    if (tyMax < tMax) tMax = tyMax;
-  }
+                         const int dirIntNeg[3]) const;
 
  public:
   Point3<T> pMin, pMax;
 };
+template <typename T>
+inline bool Bounds3<T>::IntersectP(const Ray &ray, Float *hitt0,
+                                   Float *hitt1) const {
+  Float t0 = 0, t1 = ray.tMax;
+  for (int i = 0; i < 3; ++i) {
+    // update interval for i-th bounding box slab
+    Float invRayDir = 1 / ray.d[i];
+    Float tNear = (pMin[i] - ray.o[i]) * invRayDir;
+    Float tFar = (pMax[i] - ray.o[i]) * invRayDir;
+    tFar *= 1 + 2 * gamma(3);
+    // update parametric interval from slab intersection t values
+    if (tNear > tFar) {
+      std::swap(tNear, tFar);
+    }
+    t0 = tNear > t0 ? tNear : t0;
+    t1 = tFar < t1 ? tFar : t1;
+    if (t0 > t1) {
+      return false;
+    }
+  }
+  if (hitt0) *hitt0 = t0;
+  if (hitt1) *hitt1 = t1;
+  return true;
+}
+
+template <typename T>
+inline bool Bounds3<T>::IntersectP(const Ray &ray, const Vector3f &invDir,
+                                   const int dirIntNeg[3]) const {
+  const Bounds3<Float> &bounds = *this;
+  Float tMin = (bounds[dirIntNeg[0]].x - ray.o.x) * invDir.x;
+  Float tMax = (bounds[1 - dirIntNeg[0]].x - ray.o.x) * invDir.x;
+  Float tyMin = (bounds[dirIntNeg[1]].y - ray.o.y) * invDir.y;
+  Float tyMax = (bounds[1 - dirIntNeg[1]].y - ray.o.y) * invDir.y;
+  float tzMin = (bounds[dirIntNeg[2]].z - ray.o.z) * invDir.z;
+  float tzMax = (bounds[1 - dirIntNeg[2]].z - ray.o.z) * invDir.z;
+
+  // TODO Update tmax and tyMax for bounding box intersection
+
+  if (tMin > tyMax || tyMin > tMax) return false;
+  if (tyMin > tMin) tMin = tyMin;
+  if (tyMax < tMax) tMax = tyMax;
+}
+
+template <typename T>
+inline const Point3<T> &Bounds3<T>::operator[](int i) const {
+  return (i == 0) ? pMin : pMax;
+}
 
 typedef Bounds2<int> Bounds2i;
 typedef Bounds2<Float> Bounds2f;

@@ -27,14 +27,3 @@ void* MemoryArena::alloc(size_t nBytes) {
   currentBlockPosition += nBytes;
   return ret;
 }
-
-template <typename T>
-T* MemoryArena::alloc(size_t n, bool runConstructor) {
-  T* ret = (T*)alloc(n * sizeof(T));
-  if (runConstructor) {
-    for (size_t i = 0; i < n; ++i) {
-      new (&ret[i]) T();
-    }
-  }
-  return ret;
-}

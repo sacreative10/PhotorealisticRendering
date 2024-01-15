@@ -11,7 +11,12 @@ class MemoryArena {
   MemoryArena(size_t blockSize = 262144) : blockSize(blockSize) {}
   void* alloc(size_t nBytes);
   template <typename T>
-  T* alloc(size_t n = 1, bool runConstructor = true);
+  T* alloc(size_t n = 1, bool runConstructor = true) {
+    T* ret = (T*)alloc(n * sizeof(T));
+    if (runConstructor)
+      for (size_t i = 0; i < n; ++i) new (&ret[i]) T();
+    return ret;
+  }
 
  private:
   const size_t blockSize;
