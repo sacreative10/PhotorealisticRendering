@@ -21,6 +21,8 @@ static constexpr Float Infinity = std::numeric_limits<Float>::infinity();
 static constexpr Float Pi = 3.14159265358979323846;
 static constexpr Float invPi = 0.31830988618379067154;
 
+// typedef CoefficientSpectrum Spectrum;
+
 #define PBRT_L1_CACHE_LINE_SIZE 64
 
 static constexpr Float machineEpsilon =

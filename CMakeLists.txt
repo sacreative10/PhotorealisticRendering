@@ -37,6 +37,8 @@ add_executable(${PROJECT_NAME}
         src/core/primitive.cpp
         src/accelerators/bvh.h
         src/accelerators/bvh.cpp
+        src/core/spectrums/coefficientSpectrum.h
+        src/core/spectrums/coefficientSpectrum.cpp
         src/main.cpp
 )
 
