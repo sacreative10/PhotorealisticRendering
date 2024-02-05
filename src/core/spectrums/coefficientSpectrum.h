@@ -4,8 +4,13 @@
 #include <cmath>
 
 #include "core/phr.h"
+#include "spectrum.h"
 
 // TODO: Add Lerp functionality
+static const int nCIESamples = 471;
+extern const Float CIE_X[nCIESamples];
+extern const Float CIE_Y[nCIESamples];
+extern const Float CIE_Z[nCIESamples];
 
 template <int nSpectrumSamples>
 class CoefficientSpectrum {
@@ -13,6 +18,14 @@ class CoefficientSpectrum {
   CoefficientSpectrum(Float v = 0.f) {
     for (int i = 0; i < nSpectrumSamples; ++i) {
       c[i] = v;
+    }
+  }
+
+  static void Init() {
+    for (int i = 0; i < nSpectralSamples; ++i) {
+      Float w10 = Lerp(Float(i) / Float(nSpectralSamples), sampledLambdaStart,
+                       sampledLambdaEnd);
+      Float w11 = Lerp(Float)
     }
   }
 
@@ -73,5 +86,6 @@ class CoefficientSpectrum {
  protected:
   static const int nSamples = nSpectrumSamples;
   Float c[nSpectrumSamples];  // a constant across all wavelangths
+  SampledSpectrum X, Y, Z;
 };
 #endif  // !PHR_CORE_SPECTRUM_COEFFICIENT_SPECTRUM_H

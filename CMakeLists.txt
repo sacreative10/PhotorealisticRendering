@@ -40,6 +40,7 @@ add_executable(${PROJECT_NAME}
         src/core/spectrums/coefficientSpectrum.h
         src/core/spectrums/coefficientSpectrum.cpp
         src/main.cpp
+        src/core/spectrums/spectrum.h
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/)
